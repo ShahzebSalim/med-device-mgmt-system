@@ -36,6 +36,11 @@ public class CertificationService {
         MedicalDevice d = em.find(MedicalDevice.class, deviceId);
         if (d == null) throw new NotFoundException("MedicalDevice not found: " + deviceId);
 
+        if (c == null) throw new jakarta.ws.rs.BadRequestException("Certification body is required");
+        if (c.getName() == null || c.getName().isBlank()) throw new jakarta.ws.rs.BadRequestException("Certification name is required");
+        if (c.getStandard() == null || c.getStandard().isBlank()) throw new jakarta.ws.rs.BadRequestException("Certification standard is required");
+        if (c.getExpiryDate() == null) throw new jakarta.ws.rs.BadRequestException("Certification expiryDate is required");
+
         c.setDevice(d);
         em.persist(c);
         return c;
