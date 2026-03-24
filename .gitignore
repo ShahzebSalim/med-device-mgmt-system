@@ -27,3 +27,6 @@ replay_pid*
 # Maven build output
 **/target/
 EOF
+
+# Local app server + DB artifacts
+/tools/
