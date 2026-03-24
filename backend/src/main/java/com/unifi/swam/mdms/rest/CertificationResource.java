@@ -13,6 +13,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Path("/devices/{deviceId}/certifications")
