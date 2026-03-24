@@ -1,7 +1,9 @@
 package com.unifi.swam.mdms.rest;
 
 import com.unifi.swam.mdms.dtos.MedicalDeviceDTO;
+import com.unifi.swam.mdms.mappers.CertificationMapper;
 import com.unifi.swam.mdms.model.MedicalDevice;
+import com.unifi.swam.mdms.services.CertificationService;
 import com.unifi.swam.mdms.services.MedicalDeviceService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -17,7 +19,10 @@ public class MedicalDeviceResource {
     @Inject
     MedicalDeviceService deviceService;
 
-    private static MedicalDeviceDTO toDTO(MedicalDevice d) {
+    @Inject
+    CertificationService certificationService;
+
+    private static MedicalDeviceDTO toDTOWithoutCerts(MedicalDevice d) {
         MedicalDeviceDTO dto = new MedicalDeviceDTO();
         dto.setId(d.getId());
         dto.setUdi(d.getUdi());
@@ -25,6 +30,16 @@ public class MedicalDeviceResource {
         dto.setVersion(d.getVersion());
         dto.setStatus(d.getStatus());
         dto.setCreatedAt(d.getCreatedAt());
+        return dto;
+    }
+
+    private MedicalDeviceDTO toDTOWithCerts(MedicalDevice d) {
+        MedicalDeviceDTO dto = toDTOWithoutCerts(d);
+        dto.setCertifications(
+                certificationService.listByDevice(d.getId()).stream()
+                        .map(CertificationMapper::toDTO)
+                        .toList()
+        );
         return dto;
     }
 
@@ -37,20 +52,21 @@ public class MedicalDeviceResource {
 
     @GET
     public List<MedicalDeviceDTO> list() {
-        return deviceService.list().stream().map(MedicalDeviceResource::toDTO).toList();
+        // lightweight: no certifications
+        return deviceService.list().stream().map(MedicalDeviceResource::toDTOWithoutCerts).toList();
     }
 
     @GET
     @Path("/{id}")
     public MedicalDeviceDTO get(@PathParam("id") long id) {
-        return toDTO(deviceService.get(id));
+        return toDTOWithCerts(deviceService.get(id));
     }
 
     @POST
     public MedicalDeviceDTO create(MedicalDeviceDTO dto) {
         MedicalDevice e = new MedicalDevice();
         applyToEntity(dto, e);
-        return toDTO(deviceService.create(e));
+        return toDTOWithoutCerts(deviceService.create(e));
     }
 
     @PUT
@@ -58,7 +74,7 @@ public class MedicalDeviceResource {
     public MedicalDeviceDTO update(@PathParam("id") long id, MedicalDeviceDTO dto) {
         MedicalDevice patch = new MedicalDevice();
         applyToEntity(dto, patch);
-        return toDTO(deviceService.update(id, patch));
+        return toDTOWithoutCerts(deviceService.update(id, patch));
     }
 
     @DELETE
@@ -67,3 +83,5 @@ public class MedicalDeviceResource {
         deviceService.delete(id);
     }
 }
+
+
