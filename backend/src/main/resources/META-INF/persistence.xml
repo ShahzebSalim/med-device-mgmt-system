@@ -1,0 +1,16 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
+    http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" 
+    version="2.1">
+    <persistence-unit name="mdms">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>jdbc/mdmsDB</jta-data-source>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mdms?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"/>
+            <property name="javax.persistence.jdbc.user" value="mdms_user"/>
+            <property name="javax.persistence.jdbc.password" value="mdms_pass"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+        </properties>
+    </persistence-unit>
+</persistence>
