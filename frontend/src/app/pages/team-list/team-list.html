@@ -1,0 +1,21 @@
+<h2>Teams</h2>
+
+<div *ngIf="error" style="color: darkred; margin: 8px 0;">
+  {{ error }}
+</div>
+
+<h3>Create team</h3>
+<div style="display:grid; gap:8px; max-width: 420px;">
+  <label>Name <input [(ngModel)]="form.name" /></label>
+  <label>Description <input [(ngModel)]="form.description" /></label>
+  <button (click)="create()">Create</button>
+</div>
+
+<hr />
+
+<h3>Team list</h3>
+<ul>
+  <li *ngFor="let t of teams">
+    {{ t.id }} — {{ t.name }} <span *ngIf="t.description">— {{ t.description }}</span>
+  </li>
+</ul>

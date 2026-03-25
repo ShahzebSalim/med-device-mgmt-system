@@ -1,30 +1,23 @@
 package com.unifi.swam.mdms.mappers;
 
 import com.unifi.swam.mdms.dtos.TeamDTO;
-import com.unifi.swam.mdms.model.Personnel;
 import com.unifi.swam.mdms.model.Team;
-
-import java.util.stream.Collectors;
 
 public final class TeamMapper {
 
     private TeamMapper() {}
 
+    /**
+     * Safe default mapping: does NOT touch lazy collections (e.g. team.getPersonnel()).
+     * This avoids "could not initialize proxy - no Session" when entities are detached.
+     */
     public static TeamDTO toDTO(Team team) {
         if (team == null) return null;
 
         TeamDTO dto = new TeamDTO();
         dto.setId(team.getId());
         dto.setName(team.getName());
-
-        if (team.getPersonnel() != null) {
-            dto.setPersonnelIds(
-                team.getPersonnel()
-                    .stream()
-                    .map(Personnel::getId)
-                    .collect(Collectors.toList())
-            );
-        }
+        // personnelIds intentionally left empty here
         return dto;
     }
 

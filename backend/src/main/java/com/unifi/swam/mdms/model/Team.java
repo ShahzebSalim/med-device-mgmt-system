@@ -1,5 +1,6 @@
 package com.unifi.swam.mdms.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ public class Team {
     private String name;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<Personnel> personnel = new ArrayList<>();
+    @JsonbTransient
+        private List<Personnel> personnel = new ArrayList<>();
 
     public Team() {}
 
@@ -25,6 +27,7 @@ public class Team {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    
     public List<Personnel> getPersonnel() { return personnel; }
     public void setPersonnel(List<Personnel> personnel) { this.personnel = personnel; }
 }
