@@ -15,8 +15,12 @@ import { Team } from '../../models/team';
 })
 export class PersonnelList implements OnInit {
   personnel: Personnel[] = [];
+  filtered: Personnel[] = [];
   teams: Team[] = [];
+  loading = false;
   error = '';
+  search = '';
+  showForm = false;
 
   // MUST match backend enum exactly
   roles = ['ADMIN', 'MANAGER', 'STANDARD_USER'];
@@ -43,11 +47,31 @@ export class PersonnelList implements OnInit {
   }
 
   load(): void {
+    this.loading = true;
     this.error = '';
     this.api.list().subscribe({
-      next: (p) => (this.personnel = p),
-      error: (e) => (this.error = e?.error?.message ?? 'Failed to load personnel'),
+      next: (p) => {
+        this.personnel = p;
+        this.applySearch();
+        this.loading = false;
+      },
+      error: (e) => {
+        this.error = e?.error?.message ?? 'Failed to load personnel';
+        this.loading = false;
+      },
     });
+  }
+
+  applySearch(): void {
+    const q = this.search.toLowerCase();
+    this.filtered = q
+      ? this.personnel.filter(
+          (p) =>
+            p.name.toLowerCase().includes(q) ||
+            (p.role ?? '').toLowerCase().includes(q) ||
+            (p.email ?? '').toLowerCase().includes(q)
+        )
+      : [...this.personnel];
   }
 
   create(): void {
@@ -62,9 +86,26 @@ export class PersonnelList implements OnInit {
     this.api.create(payload).subscribe({
       next: () => {
         this.form = { name: '', role: 'STANDARD_USER', email: '', teamId: null };
+        this.showForm = false;
         this.load();
       },
       error: (e) => (this.error = e?.error ?? e?.error?.message ?? 'Failed to create personnel'),
     });
+  }
+
+  teamName(id?: number | null): string {
+    if (id == null) return '—';
+    return this.teams.find((t) => t.id === id)?.name ?? String(id);
+  }
+
+  roleClass(role?: string): string {
+    switch (role) {
+      case 'ADMIN':
+        return 'bg-purple-100 text-purple-800';
+      case 'MANAGER':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
   }
 }
