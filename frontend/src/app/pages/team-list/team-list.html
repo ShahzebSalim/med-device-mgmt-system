@@ -1,21 +1,86 @@
-<h2>Teams</h2>
-
-<div *ngIf="error" style="color: darkred; margin: 8px 0;">
-  {{ error }}
+<!-- Page Header -->
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Teams</h1>
+    <p class="text-sm text-gray-500 mt-1">Manage R&amp;D and operational teams</p>
+  </div>
+  <button (click)="showForm = !showForm"
+    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors shadow-sm">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
+    Add Team
+  </button>
 </div>
 
-<h3>Create team</h3>
-<div style="display:grid; gap:8px; max-width: 420px;">
-  <label>Name <input [(ngModel)]="form.name" /></label>
-  <label>Description <input [(ngModel)]="form.description" /></label>
-  <button (click)="create()">Create</button>
+<!-- Error Alert -->
+<div *ngIf="error" class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+  <svg class="h-5 w-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10" /><path stroke-linecap="round" d="M12 8v4m0 4h.01" />
+  </svg>
+  <span class="text-sm">{{ error }}</span>
 </div>
 
-<hr />
+<!-- Create Form -->
+<div *ngIf="showForm" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+  <h2 class="text-lg font-semibold text-gray-800 mb-4">New Team</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Team Name *</label>
+      <input [(ngModel)]="form.name" placeholder="e.g. Quality Assurance"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+      <input [(ngModel)]="form.description" placeholder="Optional description"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+  </div>
+  <div class="flex gap-3 mt-4">
+    <button (click)="create()"
+      class="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors">
+      Save Team
+    </button>
+    <button (click)="showForm = false"
+      class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
+      Cancel
+    </button>
+  </div>
+</div>
 
-<h3>Team list</h3>
-<ul>
-  <li *ngFor="let t of teams">
-    {{ t.id }} — {{ t.name }} <span *ngIf="t.description">— {{ t.description }}</span>
-  </li>
-</ul>
+<!-- Loading State -->
+<div *ngIf="loading" class="flex justify-center items-center py-16">
+  <svg class="animate-spin h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+  </svg>
+</div>
+
+<!-- Teams Grid -->
+<div *ngIf="!loading && teams.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div *ngFor="let t of teams"
+    class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div class="flex items-start justify-between">
+      <div class="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+        <svg class="h-5 w-5 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4 6V4m0 0a4 4 0 00-4 4m4-4a4 4 0 014 4" />
+        </svg>
+      </div>
+      <span class="text-xs text-gray-400">ID: {{ t.id }}</span>
+    </div>
+    <h3 class="mt-3 text-base font-semibold text-gray-900">{{ t.name }}</h3>
+    <p class="mt-1 text-sm text-gray-500">{{ t.description || 'No description provided.' }}</p>
+  </div>
+</div>
+
+<!-- Empty State -->
+<div *ngIf="!loading && teams.length === 0"
+  class="bg-white rounded-xl shadow-sm border border-gray-200 py-16 text-center">
+  <svg class="mx-auto h-10 w-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+    <path stroke-linecap="round" stroke-linejoin="round"
+      d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4 6V4m0 0a4 4 0 00-4 4m4-4a4 4 0 014 4" />
+  </svg>
+  <p class="mt-3 text-sm text-gray-500">No teams yet. Create your first team.</p>
+</div>
+

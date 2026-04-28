@@ -14,7 +14,11 @@ import { Device } from '../../models/device';
 })
 export class DeviceList implements OnInit {
   devices: Device[] = [];
+  filtered: Device[] = [];
+  loading = false;
   error = '';
+  search = '';
+  showForm = false;
 
   form: Partial<Device> = {
     name: '',
@@ -30,11 +34,31 @@ export class DeviceList implements OnInit {
   }
 
   load(): void {
+    this.loading = true;
     this.error = '';
     this.api.list().subscribe({
-      next: (d) => (this.devices = d),
-      error: (e) => (this.error = e?.error?.message ?? 'Failed to load devices'),
+      next: (d) => {
+        this.devices = d;
+        this.applySearch();
+        this.loading = false;
+      },
+      error: (e) => {
+        this.error = e?.error?.message ?? 'Failed to load devices';
+        this.loading = false;
+      },
     });
+  }
+
+  applySearch(): void {
+    const q = this.search.toLowerCase();
+    this.filtered = q
+      ? this.devices.filter(
+          (d) =>
+            d.name.toLowerCase().includes(q) ||
+            d.udi.toLowerCase().includes(q) ||
+            (d.version ?? '').toLowerCase().includes(q)
+        )
+      : [...this.devices];
   }
 
   create(): void {
@@ -42,6 +66,7 @@ export class DeviceList implements OnInit {
     this.api.create(this.form).subscribe({
       next: () => {
         this.form = { name: '', udi: '', version: '', status: 'ACTIVE' };
+        this.showForm = false;
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create device'),
@@ -50,5 +75,11 @@ export class DeviceList implements OnInit {
 
   open(d: Device): void {
     this.router.navigate(['/devices', d.id]);
+  }
+
+  statusClass(status: string): string {
+    return status === 'ACTIVE'
+      ? 'bg-green-100 text-green-800'
+      : 'bg-red-100 text-red-800';
   }
 }
