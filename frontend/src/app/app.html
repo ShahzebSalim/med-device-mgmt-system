@@ -1,9 +1,31 @@
-<h1>Medical Device Management System</h1>
-
-<nav style="display:flex; gap:12px; margin-bottom: 16px;">
-  <a routerLink="/devices">Devices</a>
-  <a routerLink="/personnel">Personnel</a>
-  <a routerLink="/teams">Teams</a>
+<nav class="bg-blue-800 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-3">
+        <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+        </svg>
+        <span class="text-lg font-bold tracking-wide">Med Device Management</span>
+      </div>
+      <div class="flex gap-1">
+        <a routerLink="/devices" routerLinkActive="bg-blue-900 text-white"
+          class="px-4 py-2 rounded-md text-sm font-medium text-blue-200 hover:bg-blue-700 hover:text-white transition-colors">
+          Devices
+        </a>
+        <a routerLink="/personnel" routerLinkActive="bg-blue-900 text-white"
+          class="px-4 py-2 rounded-md text-sm font-medium text-blue-200 hover:bg-blue-700 hover:text-white transition-colors">
+          Personnel
+        </a>
+        <a routerLink="/teams" routerLinkActive="bg-blue-900 text-white"
+          class="px-4 py-2 rounded-md text-sm font-medium text-blue-200 hover:bg-blue-700 hover:text-white transition-colors">
+          Teams
+        </a>
+      </div>
+    </div>
+  </div>
 </nav>
 
-<router-outlet></router-outlet>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <router-outlet></router-outlet>
+</main>
