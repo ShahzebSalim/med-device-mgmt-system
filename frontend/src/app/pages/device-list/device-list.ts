@@ -38,6 +38,7 @@ export class DeviceList implements OnInit {
     this.api.list().subscribe({
       next: (d) => {
         this.devices = d;
+        this.error = ''; // <-- FIX: Clears error state successfully on load
         this.loading = false;
       },
       error: (e) => {
@@ -53,6 +54,7 @@ export class DeviceList implements OnInit {
       next: () => {
         this.form = { name: '', udi: '', version: '', status: 'ACTIVE' };
         this.showForm = false;
+        this.error = ''; // <-- FIX: Clears error state successfully on create
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create device'),

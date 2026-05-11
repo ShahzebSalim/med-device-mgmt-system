@@ -5,7 +5,7 @@ import { Personnel } from '../models/personnel';
 
 @Injectable({ providedIn: 'root' })
 export class PersonnelService {
-  private base = '/api/personnel';
+private base = '/mdms-backend/api/personnel';
 
   constructor(private http: HttpClient) {}
 

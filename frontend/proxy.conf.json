@@ -1,8 +1,7 @@
 {
-  "/api": {
-    "target": "http://localhost:8080/mdms-backend-0.1.0-SNAPSHOT",
+  "/mdms-backend/api": {
+    "target": "http://localhost:8080",
     "secure": false,
-    "changeOrigin": true,
-    "logLevel": "debug"
+    "changeOrigin": true
   }
 }

@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
-  private base = '/api/devices';
-
+  private base = '/mdms-backend/api/devices';
   constructor(private http: HttpClient) {}
 
   list(): Observable<Device[]> {

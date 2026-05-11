@@ -34,6 +34,7 @@ export class TeamList implements OnInit {
     this.api.list().subscribe({
       next: (t) => {
         this.teams = t;
+        this.error = ''; // <-- FIX: Clears the error state successfully on load
         this.loading = false;
       },
       error: (e) => {
@@ -49,6 +50,7 @@ export class TeamList implements OnInit {
       next: () => {
         this.form = { name: '', description: '' };
         this.showForm = false;
+        this.error = ''; // <-- FIX: Clears the error state successfully on create
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create team'),

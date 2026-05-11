@@ -5,3 +5,38 @@
 body {
   @apply bg-gray-50 text-gray-900;
 }
+
+/* --- Dashboard PDF Export Styles --- */
+/* This block only triggers when you click "Download PDF" */
+@media print {
+  /* 1. Hide UI elements that shouldn't be on a formal report */
+  .no-print, nav, .navbar, button, svg {
+    display: none !important;
+  }
+  
+  /* 2. Force the background to white for paper printing */
+  body, .min-h-screen, .bg-gray-50 {
+    background-color: white !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 3. Make the report look crisp and clean */
+  .shadow-sm, .shadow-md {
+    box-shadow: none !important;
+    border: 1px solid #f0f0f0 !important;
+  }
+
+  /* 4. CRITICAL: Ensures the blue/green/purple bars appear in the PDF */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 5. Adjust layout for A4 paper */
+  .max-w-7xl {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}

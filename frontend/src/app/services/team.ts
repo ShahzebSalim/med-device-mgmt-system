@@ -5,7 +5,7 @@ import { Team } from '../models/team';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
-  private base = '/api/teams';
+private base = '/mdms-backend/api/teams';
 
   constructor(private http: HttpClient) {}
 

@@ -51,6 +51,7 @@ export class PersonnelList implements OnInit {
     this.api.list().subscribe({
       next: (p) => {
         this.personnel = p;
+        this.error = ''; // <-- FIX: Clears the error state successfully on load
         this.loading = false;
       },
       error: (e) => {
@@ -73,6 +74,7 @@ export class PersonnelList implements OnInit {
       next: () => {
         this.form = { name: '', role: 'STANDARD_USER', email: '', teamId: null };
         this.showForm = false;
+        this.error = ''; // <-- FIX: Clears the error state successfully on create
         this.load();
       },
       error: (e) => (this.error = e?.error ?? e?.error?.message ?? 'Failed to create personnel'),
