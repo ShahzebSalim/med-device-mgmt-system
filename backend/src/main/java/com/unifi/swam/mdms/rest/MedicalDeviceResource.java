@@ -10,6 +10,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/devices")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,7 +39,7 @@ public class MedicalDeviceResource {
         dto.setCertifications(
                 certificationService.listByDevice(d.getId()).stream()
                         .map(CertificationMapper::toDTO)
-                        .toList()
+                        .collect(Collectors.toList())
         );
         return dto;
     }
@@ -53,7 +54,7 @@ public class MedicalDeviceResource {
     @GET
     public List<MedicalDeviceDTO> list() {
         // lightweight: no certifications
-        return deviceService.list().stream().map(MedicalDeviceResource::toDTOWithoutCerts).toList();
+        return deviceService.list().stream().map(MedicalDeviceResource::toDTOWithoutCerts).collect(Collectors.toList());
     }
 
     @GET
@@ -83,5 +84,4 @@ public class MedicalDeviceResource {
         deviceService.delete(id);
     }
 }
-
 

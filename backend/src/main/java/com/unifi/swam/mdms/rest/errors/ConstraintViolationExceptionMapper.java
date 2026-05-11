@@ -9,6 +9,7 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Provider
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
@@ -17,7 +18,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
     public Response toResponse(ConstraintViolationException exception) {
         List<Map<String, String>> violations = exception.getConstraintViolations().stream()
                 .map(this::toViolation)
-                .toList();
+                .collect(Collectors.toList());
 
         return Response.status(Response.Status.BAD_REQUEST)
                 .type(MediaType.APPLICATION_JSON)

@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/devices/{deviceId}/certifications")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +30,7 @@ public class CertificationResource {
     public List<CertificationDTO> listByDevice(@PathParam("deviceId") long deviceId) {
         return certificationService.listByDevice(deviceId).stream()
                 .map(CertificationMapper::toDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @POST
