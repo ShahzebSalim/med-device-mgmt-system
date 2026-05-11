@@ -9,6 +9,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/teams")
 @Produces(MediaType.APPLICATION_JSON)
@@ -20,7 +21,7 @@ public class TeamResource {
 
     @GET
     public List<TeamDTO> list() {
-        return teamService.list().stream().map(TeamMapper::toDTO).toList();
+        return teamService.list().stream().map(TeamMapper::toDTO).collect(Collectors.toList());
     }
 
     @GET

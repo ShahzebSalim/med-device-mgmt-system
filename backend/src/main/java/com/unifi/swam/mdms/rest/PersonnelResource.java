@@ -9,6 +9,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/personnel")
 @Produces(MediaType.APPLICATION_JSON)
@@ -20,7 +21,7 @@ public class PersonnelResource {
 
     @GET
     public List<PersonnelDTO> list() {
-        return personnelService.list().stream().map(PersonnelMapper::toDTO).toList();
+        return personnelService.list().stream().map(PersonnelMapper::toDTO).collect(Collectors.toList());
     }
 
     @GET
