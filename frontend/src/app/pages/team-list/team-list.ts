@@ -14,6 +14,8 @@ import { Team } from '../../models/team';
 export class TeamList implements OnInit {
   teams: Team[] = [];
   error = '';
+  loading = false;
+  showForm = false;
 
   form: Partial<Team> = {
     name: '',
@@ -28,9 +30,16 @@ export class TeamList implements OnInit {
 
   load(): void {
     this.error = '';
+    this.loading = true;
     this.api.list().subscribe({
-      next: (t) => (this.teams = t),
-      error: (e) => (this.error = e?.error?.message ?? 'Failed to load teams'),
+      next: (t) => {
+        this.teams = t;
+        this.loading = false;
+      },
+      error: (e) => {
+        this.error = e?.error?.message ?? 'Failed to load teams';
+        this.loading = false;
+      },
     });
   }
 
@@ -39,6 +48,7 @@ export class TeamList implements OnInit {
     this.api.create(this.form).subscribe({
       next: () => {
         this.form = { name: '', description: '' };
+        this.showForm = false;
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create team'),

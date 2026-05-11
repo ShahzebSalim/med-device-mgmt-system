@@ -15,6 +15,9 @@ import { Device } from '../../models/device';
 export class DeviceList implements OnInit {
   devices: Device[] = [];
   error = '';
+  loading = false;
+  showForm = false;
+  search = '';
 
   form: Partial<Device> = {
     name: '',
@@ -31,9 +34,16 @@ export class DeviceList implements OnInit {
 
   load(): void {
     this.error = '';
+    this.loading = true;
     this.api.list().subscribe({
-      next: (d) => (this.devices = d),
-      error: (e) => (this.error = e?.error?.message ?? 'Failed to load devices'),
+      next: (d) => {
+        this.devices = d;
+        this.loading = false;
+      },
+      error: (e) => {
+        this.error = e?.error?.message ?? 'Failed to load devices';
+        this.loading = false;
+      },
     });
   }
 
@@ -42,6 +52,7 @@ export class DeviceList implements OnInit {
     this.api.create(this.form).subscribe({
       next: () => {
         this.form = { name: '', udi: '', version: '', status: 'ACTIVE' };
+        this.showForm = false;
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create device'),
@@ -50,5 +61,22 @@ export class DeviceList implements OnInit {
 
   open(d: Device): void {
     this.router.navigate(['/devices', d.id]);
+  }
+
+  get filtered(): Device[] {
+    const q = this.search.trim().toLowerCase();
+    if (!q) return this.devices;
+    return this.devices.filter(
+      (d) =>
+        d.name.toLowerCase().includes(q) ||
+        d.udi.toLowerCase().includes(q) ||
+        d.version.toLowerCase().includes(q)
+    );
+  }
+
+  statusClass(status: string): string {
+    if (status === 'ACTIVE') return 'bg-green-100 text-green-800';
+    if (status === 'INACTIVE') return 'bg-red-100 text-red-800';
+    return 'bg-gray-100 text-gray-700';
   }
 }
