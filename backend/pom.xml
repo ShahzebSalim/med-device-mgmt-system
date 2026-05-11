@@ -9,11 +9,11 @@
   <name>Medical Device Management System - Backend</name>
 
   <properties>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Jakarta EE API is provided by the application server (Payara / WildFly / GlassFish) -->
-    <jakarta.ee.version>10.0.0</jakarta.ee.version>
+    <jakarta.ee.version>9.1.0</jakarta.ee.version>
 
     <!-- Only needed if you want to run JPA with Hibernate directly (outside app server). Many servers include a provider. -->
     <hibernate.version>6.4.4.Final</hibernate.version>
