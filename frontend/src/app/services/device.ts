@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class DeviceService {
   private base = '/mdms-backend/api/devices';
+  
   constructor(private http: HttpClient) {}
 
   list(): Observable<Device[]> {
@@ -22,5 +23,10 @@ export class DeviceService {
 
   update(id: number, device: Partial<Device>): Observable<Device> {
     return this.http.put<Device>(`${this.base}/${id}`, device);
+  }
+
+  // --- ADDED THIS MISSING DELETE METHOD ---
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.base}/${id}`);
   }
 }

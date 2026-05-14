@@ -38,7 +38,7 @@ export class DeviceList implements OnInit {
     this.api.list().subscribe({
       next: (d) => {
         this.devices = d;
-        this.error = ''; // <-- FIX: Clears error state successfully on load
+        this.error = ''; 
         this.loading = false;
       },
       error: (e) => {
@@ -54,7 +54,7 @@ export class DeviceList implements OnInit {
       next: () => {
         this.form = { name: '', udi: '', version: '', status: 'ACTIVE' };
         this.showForm = false;
-        this.error = ''; // <-- FIX: Clears error state successfully on create
+        this.error = ''; 
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create device'),
@@ -63,6 +63,29 @@ export class DeviceList implements OnInit {
 
   open(d: Device): void {
     this.router.navigate(['/devices', d.id]);
+  }
+
+  // --- DELETE METHOD ---
+  deleteDevice(id: number | undefined, event: Event): void {
+    // This stops the row click event from triggering the open() method
+    event.stopPropagation(); 
+
+    if (!id) return;
+    
+    // Safety check
+    const confirmed = confirm('Are you sure you want to delete this device? All associated certifications will also be permanently removed.');
+    
+    if (confirmed) {
+      // Correctly calls 'delete' and properly types the error as 'any'
+      this.api.delete(id).subscribe({
+        next: () => {
+          this.load(); // Refresh the list automatically
+        },
+        error: (e: any) => {
+          this.error = e?.error?.message ?? 'Failed to delete device';
+        }
+      });
+    }
   }
 
   get filtered(): Device[] {
