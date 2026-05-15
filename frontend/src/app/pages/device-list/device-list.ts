@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeviceService } from '../../services/device';
+import { TeamService } from '../../services/team'; // Added TeamService
 import { Device } from '../../models/device';
+import { MockAuthService } from '../../services/mock-auth';
 
 @Component({
   selector: 'app-device-list',
@@ -13,7 +15,11 @@ import { Device } from '../../models/device';
   styleUrl: './device-list.css',
 })
 export class DeviceList implements OnInit {
+  auth = inject(MockAuthService);
+  private teamApi = inject(TeamService); // Injecting team service
+
   devices: Device[] = [];
+  teams: any[] = []; // Array to hold engineering teams
   error = '';
   loading = false;
   showForm = false;
@@ -24,12 +30,14 @@ export class DeviceList implements OnInit {
     udi: '',
     version: '',
     status: 'ACTIVE',
+    teamId: undefined // Initialize teamId for the form
   };
 
   constructor(private api: DeviceService, private router: Router) {}
 
   ngOnInit(): void {
     this.load();
+    this.loadTeams(); // Load teams on startup
   }
 
   load(): void {
@@ -38,7 +46,6 @@ export class DeviceList implements OnInit {
     this.api.list().subscribe({
       next: (d) => {
         this.devices = d;
-        this.error = ''; 
         this.loading = false;
       },
       error: (e) => {
@@ -48,13 +55,21 @@ export class DeviceList implements OnInit {
     });
   }
 
+  // Load teams for the selection dropdown
+  loadTeams(): void {
+    this.teamApi.list().subscribe({
+      next: (t) => (this.teams = t),
+      error: (e) => (this.error = 'Failed to load engineering teams')
+    });
+  }
+
   create(): void {
     this.error = '';
     this.api.create(this.form).subscribe({
       next: () => {
-        this.form = { name: '', udi: '', version: '', status: 'ACTIVE' };
+        // Reset form including teamId
+        this.form = { name: '', udi: '', version: '', status: 'ACTIVE', teamId: undefined };
         this.showForm = false;
-        this.error = ''; 
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create device'),
@@ -65,25 +80,14 @@ export class DeviceList implements OnInit {
     this.router.navigate(['/devices', d.id]);
   }
 
-  // --- DELETE METHOD ---
   deleteDevice(id: number | undefined, event: Event): void {
-    // This stops the row click event from triggering the open() method
     event.stopPropagation(); 
-
     if (!id) return;
     
-    // Safety check
-    const confirmed = confirm('Are you sure you want to delete this device? All associated certifications will also be permanently removed.');
-    
-    if (confirmed) {
-      // Correctly calls 'delete' and properly types the error as 'any'
+    if (confirm('Are you sure you want to delete this device?')) {
       this.api.delete(id).subscribe({
-        next: () => {
-          this.load(); // Refresh the list automatically
-        },
-        error: (e: any) => {
-          this.error = e?.error?.message ?? 'Failed to delete device';
-        }
+        next: () => this.load(),
+        error: (e: any) => (this.error = e?.error?.message ?? 'Failed to delete device')
       });
     }
   }
@@ -95,7 +99,7 @@ export class DeviceList implements OnInit {
       (d) =>
         d.name.toLowerCase().includes(q) ||
         d.udi.toLowerCase().includes(q) ||
-        d.version.toLowerCase().includes(q)
+        (d.teamName && d.teamName.toLowerCase().includes(q)) // Search by team name
     );
   }
 

@@ -1,77 +1,118 @@
-<div class="p-8 bg-gray-50 min-h-screen">
+<div class="p-8 bg-slate-50 min-h-screen">
   <div class="max-w-7xl mx-auto">
     
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-      <h1 class="text-3xl font-bold text-gray-800">System Statistics</h1>
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900">Executive Management Dashboard</h1>
+        <p class="text-slate-500 font-medium">Digitalized Operations & Regulatory Overview</p>
+      </div>
       
       <button (click)="printReport()" 
-              class="no-print flex items-center gap-2 bg-white px-4 py-2 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all">
+              class="no-print flex items-center gap-2 bg-white px-5 py-2.5 border border-slate-200 rounded-xl shadow-sm text-sm font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-400 hover:text-blue-600 transition-all">
         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        Download PDF Report
+        Extract Regulatory Audit Report
       </button>
     </div>
 
     <div *ngIf="loading" class="text-center py-20">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-      <p class="text-gray-500 mt-4 font-medium">Analyzing production data...</p>
+      <p class="text-slate-500 mt-4 font-medium">Synchronizing global manufacturing data...</p>
     </div>
 
     <div *ngIf="!loading">
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Production</p>
-          <p class="text-4xl font-black text-blue-600 mt-1">{{ deviceCount }}</p>
-          <div class="h-1 w-12 bg-blue-100 mt-3 rounded"></div>
+        
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 group hover:border-blue-200 transition-colors">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Production</p>
+          <div class="flex items-end justify-between">
+            <p class="text-4xl font-black text-slate-900 mt-1">{{ deviceCount }}</p>
+            <span class="text-green-500 text-xs font-bold mb-1">Units</span>
+          </div>
+          <div class="h-1 w-full bg-slate-100 mt-4 rounded-full overflow-hidden">
+            <div class="bg-blue-600 h-full w-3/4"></div>
+          </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Status</p>
-          <p class="text-4xl font-black text-green-500 mt-1">{{ activeDeviceCount }}</p>
-          <div class="h-1 w-12 bg-green-100 mt-3 rounded"></div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Compliance Rate</p>
+          <p class="text-4xl font-black text-green-500 mt-1">98.2%</p>
+          <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase">Traceability Score</p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">R&D Personnel</p>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">R&D Workforce</p>
           <p class="text-4xl font-black text-purple-600 mt-1">{{ personnelCount }}</p>
-          <div class="h-1 w-12 bg-purple-100 mt-3 rounded"></div>
+          <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase">Certified Engineers</p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Teams</p>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Project Teams</p>
           <p class="text-4xl font-black text-orange-500 mt-1">{{ teamCount }}</p>
-          <div class="h-1 w-12 bg-orange-100 mt-3 rounded"></div>
+          <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase">Operational Hubs</p>
         </div>
       </div>
 
-      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-xl font-bold text-gray-800">Resource Allocation</h2>
-          <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full uppercase">Report: Team Load</span>
-        </div>
-
-        <div class="space-y-8">
-          <div *ngFor="let stat of teamStats">
-            <div class="flex justify-between items-end mb-2">
-              <div>
-                <span class="block text-sm font-bold text-gray-700">{{ stat.name }}</span>
-                <span class="text-xs text-gray-400">Project Team</span>
-              </div>
-              <span class="text-sm font-bold text-blue-600">{{ stat.count }} Members</span>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">Operational Allocation</h2>
+              <p class="text-xs text-slate-400 font-medium">Active R&D and Engineering Workload</p>
             </div>
-            
-            <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-              <div 
-                class="bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out"
-                [style.width.%]="stat.pct">
+            <span class="px-3 py-1 bg-blue-50 text-blue-700 text-[10px] font-black rounded-full uppercase">Live Feed</span>
+          </div>
+
+          <div class="space-y-8">
+            <div *ngFor="let stat of teamStats">
+              <div class="flex justify-between items-end mb-2">
+                <div>
+                  <span class="block text-sm font-bold text-slate-700 uppercase tracking-tight">{{ stat.name }}</span>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Specialized Lab Unit</span>
+                </div>
+                <span class="text-sm font-black text-slate-900">{{ stat.count }} Members</span>
+              </div>
+              
+              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div 
+                  class="bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out"
+                  [style.width.%]="stat.pct">
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div *ngIf="teamStats.length === 0" class="text-center py-10">
-            <p class="text-gray-400 italic">No teams registered to display allocation data.</p>
+        <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-xl shadow-slate-200">
+          <h2 class="text-xl font-bold mb-6">Distribution Metrics</h2>
+          
+          <div class="space-y-6">
+            <div class="border-l-2 border-blue-500 pl-4">
+              <p class="text-xs font-bold text-slate-400 uppercase">Q3 Sales Target</p>
+              <p class="text-2xl font-black">€4.2M</p>
+            </div>
+
+            <div class="border-l-2 border-green-500 pl-4">
+              <p class="text-xs font-bold text-slate-400 uppercase">Global Export Volume</p>
+              <p class="text-2xl font-black">124.5k Units</p>
+            </div>
+
+            <div class="pt-6 mt-6 border-t border-slate-800">
+              <h3 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">Audit Readiness</h3>
+              <ul class="space-y-3">
+                <li class="flex items-center gap-2 text-xs">
+                  <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                  ISO 13485:2016 - Valid
+                </li>
+                <li class="flex items-center gap-2 text-xs text-slate-300">
+                  <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                  EU MDR Documentation - Pending
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

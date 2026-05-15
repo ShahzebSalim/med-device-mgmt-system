@@ -5,10 +5,10 @@ import com.unifi.swam.mdms.mappers.CertificationMapper;
 import com.unifi.swam.mdms.model.MedicalDevice;
 import com.unifi.swam.mdms.services.CertificationService;
 import com.unifi.swam.mdms.services.MedicalDeviceService;
+import com.unifi.swam.mdms.services.TeamService; // Assuming you have this
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +23,24 @@ public class MedicalDeviceResource {
     @Inject
     CertificationService certificationService;
 
-    private static MedicalDeviceDTO toDTOWithoutCerts(MedicalDevice d) {
+    @Inject
+    TeamService teamService; // Added to lookup teams by ID
+
+    private MedicalDeviceDTO toDTOWithoutCerts(MedicalDevice d) {
         MedicalDeviceDTO dto = new MedicalDeviceDTO();
         dto.setId(d.getId());
         dto.setUdi(d.getUdi());
         dto.setName(d.getName());
+        dto.setProductLine(d.getProductLine()); 
         dto.setVersion(d.getVersion());
         dto.setStatus(d.getStatus());
         dto.setCreatedAt(d.getCreatedAt());
+
+        // MAP TEAM INFO
+        if (d.getTeam() != null) {
+            dto.setTeamId(d.getTeam().getId());
+            dto.setTeamName(d.getTeam().getName());
+        }
         return dto;
     }
 
@@ -44,17 +54,22 @@ public class MedicalDeviceResource {
         return dto;
     }
 
-    private static void applyToEntity(MedicalDeviceDTO dto, MedicalDevice e) {
+    private void applyToEntity(MedicalDeviceDTO dto, MedicalDevice e) {
         e.setUdi(dto.getUdi());
         e.setName(dto.getName());
+        e.setProductLine(dto.getProductLine()); 
         e.setVersion(dto.getVersion());
         e.setStatus(dto.getStatus());
+
+        // SET TEAM RELATIONSHIP
+        if (dto.getTeamId() != null) {
+            e.setTeam(teamService.get(dto.getTeamId()));
+        }
     }
 
     @GET
     public List<MedicalDeviceDTO> list() {
-        // lightweight: no certifications
-        return deviceService.list().stream().map(MedicalDeviceResource::toDTOWithoutCerts).collect(Collectors.toList());
+        return deviceService.list().stream().map(this::toDTOWithoutCerts).collect(Collectors.toList());
     }
 
     @GET
@@ -84,4 +99,3 @@ public class MedicalDeviceResource {
         deviceService.delete(id);
     }
 }
-

@@ -18,7 +18,12 @@ public class Team {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @JsonbTransient
-        private List<Personnel> personnel = new ArrayList<>();
+    private List<Personnel> personnel = new ArrayList<>();
+
+    // --- NEW RELATIONSHIP: DEVICES OWNED BY TEAM ---
+    @OneToMany(mappedBy = "team")
+    @JsonbTransient
+    private List<MedicalDevice> devices = new ArrayList<>();
 
     public Team() {}
 
@@ -27,7 +32,9 @@ public class Team {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    
     public List<Personnel> getPersonnel() { return personnel; }
     public void setPersonnel(List<Personnel> personnel) { this.personnel = personnel; }
+
+    public List<MedicalDevice> getDevices() { return devices; }
+    public void setDevices(List<MedicalDevice> devices) { this.devices = devices; }
 }
