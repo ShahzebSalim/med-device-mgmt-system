@@ -21,12 +21,15 @@ export class PersonnelList implements OnInit {
   showForm = false;
   search = '';
 
-  // MUST match backend enum exactly
-  roles = ['ADMIN', 'MANAGER', 'STANDARD_USER'];
+  // Inline editing tracking
+  editingId: number | null = null;
+  editForm: any = { name: '', role: 'EXECUTIVE', email: '', teamId: null };
+
+  roles = ['EXECUTIVE', 'ENGINEER', 'TEAM_MANAGER','TEAM_LEAD'];
 
   form: any = {
     name: '',
-    role: 'STANDARD_USER',
+    role: 'EXECUTIVE',
     email: '',
     teamId: null as number | null,
   };
@@ -51,7 +54,6 @@ export class PersonnelList implements OnInit {
     this.api.list().subscribe({
       next: (p) => {
         this.personnel = p;
-        this.error = ''; // <-- FIX: Clears the error state successfully on load
         this.loading = false;
       },
       error: (e) => {
@@ -72,13 +74,57 @@ export class PersonnelList implements OnInit {
 
     this.api.create(payload).subscribe({
       next: () => {
-        this.form = { name: '', role: 'STANDARD_USER', email: '', teamId: null };
+        this.form = { name: '', role: 'EXECUTIVE', email: '', teamId: null };
         this.showForm = false;
-        this.error = ''; // <-- FIX: Clears the error state successfully on create
         this.load();
       },
-      error: (e) => (this.error = e?.error ?? e?.error?.message ?? 'Failed to create personnel'),
+      error: (e) => (this.error = e?.error?.message ?? e?.error ?? 'Failed to create personnel'),
     });
+  }
+
+  // --- NEW CRUD METHODS ---
+  startEdit(p: Personnel): void {
+    if (p.id == null) return;
+    this.editingId = p.id;
+    this.editForm = {
+      name: p.name,
+      role: p.role,
+      email: p.email,
+      teamId: p.teamId,
+    };
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
+  }
+
+  saveEdit(id: number): void {
+    this.error = '';
+    const payload: Partial<Personnel> = {
+      name: this.editForm.name,
+      role: this.editForm.role,
+      email: this.editForm.email,
+      teamId: this.editForm.teamId ? Number(this.editForm.teamId) : null,
+    };
+
+    this.api.update(id, payload).subscribe({
+      next: () => {
+        this.editingId = null;
+        this.load();
+      },
+      error: (e) => (this.error = e?.error?.message ?? 'Failed to update personnel'),
+    });
+  }
+
+  deletePersonnel(id: number | undefined): void {
+    if (!id) return;
+    if (confirm('Are you sure you want to remove this employee from the personnel registry?')) {
+      this.error = '';
+      this.api.delete(id).subscribe({
+        next: () => this.load(),
+        error: (e) => (this.error = e?.error?.message ?? 'Failed to delete personnel'),
+      });
+    }
   }
 
   get filtered(): Personnel[] {

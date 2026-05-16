@@ -5,7 +5,7 @@ import { Personnel } from '../models/personnel';
 
 @Injectable({ providedIn: 'root' })
 export class PersonnelService {
-private base = '/mdms-backend/api/personnel';
+  private base = '/mdms-backend/api/personnel';
 
   constructor(private http: HttpClient) {}
 
@@ -15,5 +15,15 @@ private base = '/mdms-backend/api/personnel';
 
   create(p: Partial<Personnel>): Observable<Personnel> {
     return this.http.post<Personnel>(this.base, p);
+  }
+
+  // --- NEW UPDATE METHOD ---
+  update(id: number, p: Partial<Personnel>): Observable<Personnel> {
+    return this.http.put<Personnel>(`${this.base}/${id}`, p);
+  }
+
+  // --- NEW DELETE METHOD ---
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.base}/${id}`);
   }
 }

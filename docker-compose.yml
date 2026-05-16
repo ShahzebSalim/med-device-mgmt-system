@@ -1,8 +1,63 @@
 services:
+  # 🗄️ TIER 1: MySQL Database Management System (DBMS)
+  db:
+    image: mysql:8.0
+    container_name: mdms-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: mdms
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: swam
+      MYSQL_PASSWORD: swam
+    networks:
+      - mdms-network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ⚙️ TIER 2: WildFly Application Server
   wildfly:
     image: quay.io/wildfly/wildfly:latest
+    container_name: mdms-wildfly
     ports:
       - "8080:8080"
       - "9990:9990"
     volumes:
       - ./backend/target/mdms-backend-0.1.0-SNAPSHOT.war:/opt/jboss/wildfly/standalone/deployments/mdms-backend.war
+      - ./backend/target/mdms-backend-0.1.0-SNAPSHOT/WEB-INF/lib/mysql-connector-j-8.3.0.jar:/opt/jboss/wildfly/standalone/deployments/mysql-connector-j.jar
+    networks:
+      - mdms-network
+    depends_on:
+      db:
+        condition: service_healthy
+    # Using a literal array block ensures newlines are perfectly preserved for the shell script
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo 'Writing JNDI datasource descriptor...'
+        cat << 'EOF' > /opt/jboss/wildfly/standalone/deployments/mdms-ds.xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <datasources xmlns="http://www.jboss.org/ironjacamar/schema"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://www.jboss.org/ironjacamar/schema/ironjacamar_1_1.xsd">
+            <datasource jndi-name="java:/jdbc/mdmsDB" pool-name="mdmsDBPool" enabled="true" use-java-context="true">
+                <connection-url>jdbc:mysql://db:3306/mdms</connection-url>
+                <driver>mysql-connector-j.jar</driver>
+                <security>
+                    <user-name>swam</user-name>
+                    <password>swam</password>
+                </security>
+            </datasource>
+        </datasources>
+        EOF
+        echo 'Descriptor successfully written. Booting application server...'
+        /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
+
+networks:
+  mdms-network:
+    driver: bridge

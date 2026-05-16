@@ -17,6 +17,10 @@ export class TeamList implements OnInit {
   loading = false;
   showForm = false;
 
+  // Track the card editing state
+  editingId: number | null = null;
+  editForm: Partial<Team> = { name: '', description: '' };
+
   form: Partial<Team> = {
     name: '',
     description: '',
@@ -34,7 +38,6 @@ export class TeamList implements OnInit {
     this.api.list().subscribe({
       next: (t) => {
         this.teams = t;
-        this.error = ''; // <-- FIX: Clears the error state successfully on load
         this.loading = false;
       },
       error: (e) => {
@@ -50,10 +53,45 @@ export class TeamList implements OnInit {
       next: () => {
         this.form = { name: '', description: '' };
         this.showForm = false;
-        this.error = ''; // <-- FIX: Clears the error state successfully on create
         this.load();
       },
       error: (e) => (this.error = e?.error?.message ?? 'Failed to create team'),
     });
+  }
+
+  // --- NEW CRUD METHODS ---
+  startEdit(t: Team): void {
+    if (t.id == null) return;
+    this.editingId = t.id;
+    this.editForm = { name: t.name, description: t.description };
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
+  }
+
+  saveEdit(id: number): void {
+    this.error = '';
+    this.api.update(id, this.editForm).subscribe({
+      next: () => {
+        this.editingId = null;
+        this.load();
+      },
+      error: (e) => (this.error = e?.error?.message ?? 'Failed to update team'),
+    });
+  }
+
+  deleteTeam(id: number | undefined): void {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this engineering team?')) {
+      this.error = '';
+      this.api.delete(id).subscribe({
+        next: () => this.load(),
+        error: (e) => {
+          // This elegantly displays your backend rule validation messages
+          this.error = e?.error?.message ?? 'Failed to delete team. Ensure no personnel are linked.';
+        },
+      });
+    }
   }
 }
