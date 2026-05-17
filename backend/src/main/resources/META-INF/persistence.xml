@@ -7,11 +7,11 @@
         <jta-data-source>jdbc/mdmsDB</jta-data-source>
 
         <properties>
-            <!-- Prototype-friendly schema generation -->
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/>
 
-            <!-- Optional but useful during development -->
+            <property name="jakarta.persistence.sql-load-script-source" value="import.sql"/>
+
             <property name="eclipselink.logging.level" value="FINE"/>
         </properties>
     </persistence-unit>

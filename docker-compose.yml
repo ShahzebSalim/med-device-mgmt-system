@@ -13,11 +13,13 @@ services:
       MYSQL_PASSWORD: swam
     networks:
       - mdms-network
+    # --- OPTIMIZED HEALTHCHECK WITH GRACE PERIOD FOR FIRST-TIME BOOTS ---
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 60s
 
   # ⚙️ TIER 2: WildFly Application Server
   wildfly:
