@@ -1,9 +1,9 @@
 services:
-  # 🗄️ TIER 1: MySQL Database Management System (DBMS)
+  # 🗄️ TIER 1: MySQL Relational Database
   db:
     image: mysql:8.0
     container_name: mdms-mysql
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=mysql_native_password --lower-case-table-names=1
     ports:
       - "3306:3306"
     environment:
@@ -13,7 +13,6 @@ services:
       MYSQL_PASSWORD: swam
     networks:
       - mdms-network
-    # --- OPTIMIZED HEALTHCHECK WITH GRACE PERIOD FOR FIRST-TIME BOOTS ---
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot"]
       interval: 5s
@@ -21,22 +20,18 @@ services:
       retries: 20
       start_period: 60s
 
-  # ⚙️ TIER 2: WildFly Application Server
+  # ⚙️ TIER 2: WildFly Application Server (Backend API)
   wildfly:
-    image: quay.io/wildfly/wildfly:latest
+    build: ./backend
     container_name: mdms-wildfly
     ports:
       - "8080:8080"
       - "9990:9990"
-    volumes:
-      - ./backend/target/mdms-backend-0.1.0-SNAPSHOT.war:/opt/jboss/wildfly/standalone/deployments/mdms-backend.war
-      - ./backend/target/mdms-backend-0.1.0-SNAPSHOT/WEB-INF/lib/mysql-connector-j-8.3.0.jar:/opt/jboss/wildfly/standalone/deployments/mysql-connector-j.jar
     networks:
       - mdms-network
     depends_on:
       db:
         condition: service_healthy
-    # Using a literal array block ensures newlines are perfectly preserved for the shell script
     command:
       - /bin/bash
       - -c
@@ -59,6 +54,17 @@ services:
         EOF
         echo 'Descriptor successfully written. Booting application server...'
         /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
+
+  # 🌐 TIER 3: Angular Single Page Application (Frontend Interface)
+  frontend:
+    build: ./frontend
+    container_name: mdms-angular
+    ports:
+      - "4200:4200"
+    networks:
+      - mdms-network
+    depends_on:
+      - wildfly
 
 networks:
   mdms-network:

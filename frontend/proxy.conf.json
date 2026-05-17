@@ -1,7 +1,8 @@
 {
-  "/mdms-backend/api": {
-    "target": "http://localhost:8080",
+  "/mdms-backend": {
+    "target": "http://wildfly:8080",
     "secure": false,
-    "changeOrigin": true
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
