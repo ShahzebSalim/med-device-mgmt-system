@@ -1,7 +1,4 @@
 
----
-
-```markdown
 # Medical Device Management System (MDMS)
 
 **SWAM Assignment - University of Florence**
@@ -239,11 +236,3 @@ cat frontend/proxy.conf.json
 **Aneeza Maroof**
 
 * University of Florence
-
-```
-
-***
-
-Does this version strike a better balance between keeping your detailed technical instructions and removing the suspicious AI artifacts?
-
-```
