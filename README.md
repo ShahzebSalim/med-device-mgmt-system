@@ -7,7 +7,7 @@ A modern, full-stack web application for managing medical devices, personnel, te
 
 ---
 
-## 🎯 Overview
+## Overview
 
 This project demonstrates a complete production-ready medical device management system built with:
 - **Backend:** Java 11 + Jakarta EE 9.1.0 + JAX-RS + JPA
@@ -16,7 +16,7 @@ This project demonstrates a complete production-ready medical device management 
 - **Database:** H2 in-memory (development) / MySQL 8.x (production)
 - **Deployment:** Docker + Docker Compose
 
-## 🚀 Quick Start (Docker)
+## Quick Start (Docker)
 
 ### Prerequisites
 - Docker & Docker Compose installed
@@ -56,7 +56,7 @@ Access the application at `http://localhost:4200`
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 med-device-mgmt-system/
@@ -90,7 +90,7 @@ med-device-mgmt-system/
 
 ---
 
-## 🔧 Backend Development & API Architecture
+## Backend Development & API Architecture
 
 ### Build Backend Manually
 
@@ -132,7 +132,7 @@ DELETE /api/teams/{id}                 # Delete team
 
 ---
 
-## 🎨 Frontend Development
+## Frontend Development
 
 ### Build for Production
 
@@ -153,7 +153,7 @@ npm run build
 
 ---
 
-## 🗄️ Database
+## Database
 
 ### Development (H2 In-Memory)
 
@@ -165,7 +165,7 @@ Deployed via Docker. The system initializes with `--lower-case-table-names=1` to
 
 ---
 
-## 🔐 Security
+## Security
 
 **Current Implementation:**
 
@@ -175,7 +175,7 @@ Deployed via Docker. The system initializes with `--lower-case-table-names=1` to
 
 ---
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### Port Already in Use
 
@@ -215,7 +215,7 @@ cat frontend/proxy.conf.json
 
 ---
 
-## 📋 System Requirements
+## System Requirements
 
 * **OS:** Windows, macOS, Linux
 * **Java:** OpenJDK 11
@@ -226,7 +226,7 @@ cat frontend/proxy.conf.json
 
 ---
 
-## 👥 Authors
+## Authors
 
 **Shahzeb Salim**
 
