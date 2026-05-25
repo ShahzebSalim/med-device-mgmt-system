@@ -1,4 +1,3 @@
-
 # Medical Device Management System (MDMS)
 
 **SWAM Assignment - University of Florence**
@@ -24,35 +23,23 @@ This project demonstrates a complete production-ready medical device management 
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/ShahzebSalim/med-device-mgmt-system.git
+git clone [https://github.com/ShahzebSalim/med-device-mgmt-system.git](https://github.com/ShahzebSalim/med-device-mgmt-system.git)
 cd med-device-mgmt-system
 
 ```
 
-### 2. Start Backend & Database with Docker
+### 2. Launch the Entire 3-Tier Architecture
 
 ```bash
 docker-compose up --build -d
-sleep 30  # Wait for WildFly to start
 
 ```
 
-This starts:
+**Wait about 30 seconds for the WildFly server to initialize, then access your applications:**
 
-* **WildFly 25** on `http://localhost:8080`
-* **H2/MySQL Database**
-* **Backend API** on `http://localhost:8080/mdms-backend/api`
-
-### 3. Start Frontend (Development)
-
-```bash
-cd frontend
-npm install
-npm start
-
-```
-
-Access the application at `http://localhost:4200`
+* **Frontend UI:** `http://localhost:4200`
+* **Backend API:** `http://localhost:8080/mdms-backend/api`
+* **WildFly Admin:** `http://localhost:9990`
 
 ---
 
@@ -86,6 +73,7 @@ med-device-mgmt-system/
 ├── docker-compose.yml               # Docker Compose Setup
 └── README.md
 
+
 ```
 
 ---
@@ -97,6 +85,7 @@ med-device-mgmt-system/
 ```bash
 cd backend
 mvn clean package
+
 
 ```
 
@@ -121,6 +110,7 @@ GET    /api/teams                      # List teams
 POST   /api/teams                      # Create team
 DELETE /api/teams/{id}                 # Delete team
 
+
 ```
 
 ### Key Components:
@@ -139,6 +129,7 @@ DELETE /api/teams/{id}                 # Delete team
 ```bash
 cd frontend
 npm run build
+
 
 ```
 
@@ -188,6 +179,7 @@ kill -9 <PID>
 lsof -i :4200
 kill -9 <PID>
 
+
 ```
 
 ### Docker Issues
@@ -200,6 +192,7 @@ docker-compose logs wildfly
 docker-compose down -v
 docker-compose up --build -d
 
+
 ```
 
 ### Frontend API Connection Failed
@@ -210,6 +203,7 @@ curl http://localhost:8080/mdms-backend/api/devices
 
 # Verify proxy config
 cat frontend/proxy.conf.json
+
 
 ```
 
@@ -236,3 +230,4 @@ cat frontend/proxy.conf.json
 **Aneeza Maroof**
 
 * University of Florence
+
