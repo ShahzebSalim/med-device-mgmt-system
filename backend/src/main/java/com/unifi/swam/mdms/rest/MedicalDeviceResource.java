@@ -5,7 +5,7 @@ import com.unifi.swam.mdms.mappers.CertificationMapper;
 import com.unifi.swam.mdms.model.MedicalDevice;
 import com.unifi.swam.mdms.services.CertificationService;
 import com.unifi.swam.mdms.services.MedicalDeviceService;
-import com.unifi.swam.mdms.services.TeamService; // Assuming you have this
+import com.unifi.swam.mdms.services.TeamService; 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -24,7 +24,7 @@ public class MedicalDeviceResource {
     CertificationService certificationService;
 
     @Inject
-    TeamService teamService; // Added to lookup teams by ID
+    TeamService teamService; 
 
     private MedicalDeviceDTO toDTOWithoutCerts(MedicalDevice d) {
         MedicalDeviceDTO dto = new MedicalDeviceDTO();
