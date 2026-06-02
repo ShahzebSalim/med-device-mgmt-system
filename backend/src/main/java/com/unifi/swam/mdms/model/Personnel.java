@@ -3,7 +3,7 @@ package com.unifi.swam.mdms.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "personnel")
+@Table(name = "personnel") // Explicitly set
 public class Personnel {
 
     @Id

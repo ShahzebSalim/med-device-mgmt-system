@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "teams")
+@Table(name = "team") // Explicitly set to singular
 public class Team {
 
     @Id
@@ -16,11 +16,14 @@ public class Team {
     @Column(nullable = false, unique = true, length = 120)
     private String name;
 
+    // Adding the description column since your SQL script inserts it
+    @Column(length = 255)
+    private String description;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @JsonbTransient
     private List<Personnel> personnel = new ArrayList<>();
 
-    // --- NEW RELATIONSHIP: DEVICES OWNED BY TEAM ---
     @OneToMany(mappedBy = "team")
     @JsonbTransient
     private List<MedicalDevice> devices = new ArrayList<>();
@@ -31,6 +34,9 @@ public class Team {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public List<Personnel> getPersonnel() { return personnel; }
     public void setPersonnel(List<Personnel> personnel) { this.personnel = personnel; }

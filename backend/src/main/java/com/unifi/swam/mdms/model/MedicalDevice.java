@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "medical_devices")
+@Table(name = "medical_device") // Explicitly set to singular snake_case
 public class MedicalDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +27,12 @@ public class MedicalDevice {
     @Enumerated(EnumType.STRING)
     private MedicalDeviceStatus status = MedicalDeviceStatus.ACTIVE;
 
-    // --- ADD THIS FOR TRACEABILITY ---
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @Column(nullable = false, updatable = false)
+    // Explicitly mapping created_at to avoid Hibernate guessing
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -53,7 +53,6 @@ public class MedicalDevice {
     public void setStatus(MedicalDeviceStatus status) { this.status = status; }
     public Instant getCreatedAt() { return createdAt; }
     
-    // --- ADD TEAM GETTER/SETTER ---
     public Team getTeam() { return team; }
     public void setTeam(Team team) { this.team = team; }
 

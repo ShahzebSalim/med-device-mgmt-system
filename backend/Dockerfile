@@ -1,17 +1,16 @@
-# STAGE 1: Build the application using Java 11
+# STAGE 1: Build
 FROM maven:3.9-eclipse-temurin-11 AS build
 WORKDIR /app
-
-# Copy the pom.xml and source code into the container
 COPY pom.xml .
 COPY src ./src
-
-# Compile the application and pack the war binary natively inside docker
 RUN mvn clean package -DskipTests
 
-# STAGE 2: Production runtime environment
+# STAGE 2: Production runtime
+# Using 26.1.3.Final as the stable bridge for Java 11 + Jakarta EE 9
 FROM quay.io/wildfly/wildfly:latest
-
-# Copy the generated war package and database driver from the build stage
+# Copy the WAR file
 COPY --from=build /app/target/mdms-backend.war /opt/jboss/wildfly/standalone/deployments/mdms-backend.war
-COPY --from=build /app/target/mdms-backend/WEB-INF/lib/mysql-connector-j-8.3.0.jar /opt/jboss/wildfly/standalone/deployments/mysql-connector-j.jar
+
+# Copy the MySQL driver from the local MAVEN repo inside the build container
+# This path is standard for the maven:3.9 image
+COPY --from=build /root/.m2/repository/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar /opt/jboss/wildfly/standalone/deployments/mysql-connector-j.jar

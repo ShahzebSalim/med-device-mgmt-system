@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "certifications")
+@Table(name = "certification") // Explicitly set to singular
 public class Certification {
 
     @Id
@@ -17,7 +17,7 @@ public class Certification {
     @Column(nullable = false, length = 120)
     private String standard;
 
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private LocalDate expiryDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

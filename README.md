@@ -9,8 +9,8 @@ A modern, full-stack web application for managing medical devices, personnel, te
 ## Overview
 
 This project demonstrates a complete production-ready medical device management system built with:
-- **Backend:** Java 11 + Jakarta EE 9.1.0 + JAX-RS + JPA
-- **Application Server:** WildFly 25.0.1
+- **Backend:** Java 11 (executed on Java 21 Runtime) + Jakarta EE 9.1.0 + JAX-RS + JPA
+- **Application Server:** WildFly 39.0.1.Final
 - **Frontend:** Angular 21.2.3 + TypeScript + Tailwind CSS
 - **Database:** H2 in-memory (development) / MySQL 8.x (production)
 - **Deployment:** Docker + Docker Compose
@@ -56,7 +56,8 @@ med-device-mgmt-system/
 │   │       ├── services/            # Business Logic (CDI)
 │   │       └── config/              # Configuration (CORS Filter)
 │   ├── src/main/resources/
-│   │   └── META-INF/persistence.xml # JPA Config
+│   │   ├── META-INF/persistence.xml # JPA Config
+│   │   └── import.sql               # Database Seed Script
 │   └── pom.xml                      # Maven Configuration
 │
 ├── frontend/                         # Angular Application
@@ -212,7 +213,7 @@ cat frontend/proxy.conf.json
 ## System Requirements
 
 * **OS:** Windows, macOS, Linux
-* **Java:** OpenJDK 11
+* **Java:** OpenJDK 11 (Compilation) / OpenJDK 21 (Container Runtime)
 * **Maven:** 3.6+
 * **Node.js:** 18+
 * **Docker:** 20.x+
